@@ -9,6 +9,7 @@ class FileRef(val filePath: String) : AutoCloseable {
     }
 
     private var tagInstance: Tag? = null
+    private var audioPropertiesInstance: AudioProperties? = null
 
     fun isNull(): Boolean {
         if (ptr == 0L) return false
@@ -19,16 +20,32 @@ class FileRef(val filePath: String) : AutoCloseable {
         if (ptr == 0L) return null
         return tagInstance ?: run {
             val tagPtr = TagLib.fileRef_tag(ptr)
-            val newTagInstance = if (tagPtr == 0L) null else Tag(tagPtr)
-            tagInstance = newTagInstance
-            newTagInstance
+            val newInstance = if (tagPtr == 0L) null else Tag(tagPtr)
+            tagInstance = newInstance
+            newInstance
+        }
+    }
+
+    fun audioProperties(): AudioProperties? {
+        if (ptr == 0L) return null
+        return audioPropertiesInstance ?: run {
+            val audioPropertiesPtr = TagLib.fileRef_audioProperties(ptr)
+            val newInstance =
+                if (audioPropertiesPtr == 0L) null else AudioProperties(audioPropertiesPtr)
+            audioPropertiesInstance = newInstance
+            newInstance
         }
     }
 
     override fun close() {
         if (ptr == 0L) return
+
         tagInstance?.close()
         tagInstance = null
+
+        audioPropertiesInstance?.close()
+        audioPropertiesInstance = null
+
         TagLib.fileRef_release(ptr)
         ptr = 0L
     }

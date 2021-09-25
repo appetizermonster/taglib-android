@@ -15,6 +15,13 @@ final class TagLib {
 
     public static native long fileRef_tag(long ptr);
 
+    public static native long fileRef_audioProperties(long ptr);
+
     // Tag
     public static native String tag_title(long ptr);
+
+    public static native String tag_artist(long ptr);
+
+    // AudioProperties
+    public static native int audioProperties_bitrate(long ptr);
 }
