@@ -1,0 +1,3 @@
+rootProject.name = "taglib-android"
+include ':app'
+include ':taglib-android'
