@@ -1,0 +1,3 @@
+[submodule "taglib-android/src/main/cpp/taglib"]
+	path = taglib-android/src/main/cpp/taglib
+	url = git@github.com:appetizermonster/taglib.git
