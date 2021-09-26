@@ -2,6 +2,7 @@ package com.nomad88.taglib.android.demo
 
 import android.Manifest
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
@@ -17,7 +18,7 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
-import com.nomad88.taglib.android.FileRef
+import com.nomad88.taglib.android.MP4File
 import com.nomad88.taglib.android.demo.databinding.ActivityMainBinding
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.debounce
@@ -109,15 +110,36 @@ class MainActivity : AppCompatActivity() {
 
     private fun onMusicItemClick(filePath: String) {
         Timber.d("onMusicItemClick: $filePath")
-        val fileRef = FileRef(filePath)
-        val tag = fileRef.tag()
-        val audioProps = fileRef.audioProperties()
+        val mp4File = MP4File.create(filePath)
+        if (mp4File == null) {
+            Toast.makeText(this, "Not MP4 File", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val tag = mp4File.tag()
+        val audioProps = mp4File.audioProperties()
         val title = tag?.title()
         val artist = tag?.artist()
+        val album = tag?.album()
+        val albumArtist = tag?.albumArtist()
+        val genre = tag?.genre()
+        val year = tag?.year()
+        val track = tag?.track()
+        val disc = tag?.disc()
+        val lyrics = tag?.lyrics()
         val bitrate = audioProps?.bitrate()
-        fileRef.close()
+        mp4File.close()
 
-        val details = "Title: $title\nArtist: $artist\nBitrate: $bitrate\n"
+        val details = "Title: $title\n" +
+                "Artist: $artist\n" +
+                "Album: $album\n" +
+                "Album artist: $albumArtist\n" +
+                "Genre: $genre\n" +
+                "Year: $year\n" +
+                "Track: $track\n" +
+                "Disc: $disc\n" +
+                "Lyrics: $lyrics\n" +
+                "Bitrate: $bitrate\n"
         val dialog = MaterialAlertDialogBuilder(this)
             .setTitle(filePath)
             .setMessage(details)

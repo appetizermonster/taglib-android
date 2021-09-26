@@ -6,21 +6,33 @@ final class TagLib {
         System.loadLibrary("taglibwrapper");
     }
 
-    // FileRef
-    public static native long fileRef_create(String filePath);
+    // MP4::File
+    public static native long mp4File_create(String filePath);
 
-    public static native void fileRef_release(long ptr);
+    public static native void mp4File_release(long ptr);
 
-    public static native boolean fileRef_isNull(long ptr);
+    public static native long mp4File_tag(long ptr);
 
-    public static native long fileRef_tag(long ptr);
-
-    public static native long fileRef_audioProperties(long ptr);
+    public static native long mp4File_audioProperties(long ptr);
 
     // Tag
-    public static native String tag_title(long ptr);
+    public static native String mp4Tag_title(long ptr);
 
-    public static native String tag_artist(long ptr);
+    public static native String mp4Tag_artist(long ptr);
+
+    public static native String mp4Tag_album(long ptr);
+
+    public static native String mp4Tag_albumArtist(long ptr);
+
+    public static native String mp4Tag_genre(long ptr);
+
+    public static native int mp4Tag_year(long ptr);
+
+    public static native int mp4Tag_track(long ptr);
+
+    public static native int mp4Tag_disc(long ptr);
+
+    public static native String mp4Tag_lyrics(long ptr);
 
     // AudioProperties
     public static native int audioProperties_bitrate(long ptr);
