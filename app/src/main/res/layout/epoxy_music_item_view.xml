@@ -6,26 +6,41 @@
     android:background="?attr/selectableItemBackground"
     android:clickable="true"
     android:focusable="true"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:padding="10dp">
 
-    <TextView
-        android:id="@+id/title_view"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:singleLine="true"
-        android:textSize="15sp"
-        tools:text="Hello, world" />
+        android:layout_weight="1"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/file_path_view"
-        android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/title_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textSize="15sp"
+            tools:text="Hello, world" />
+
+        <TextView
+            android:id="@+id/file_path_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:alpha="0.8"
+            android:ellipsize="middle"
+            android:lines="2"
+            android:textSize="13sp"
+            tools:text="Hello, world" />
+    </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/modify_button"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:alpha="0.8"
-        android:ellipsize="middle"
-        android:lines="2"
-        android:textSize="13sp"
-        tools:text="Hello, world" />
-
+        android:minWidth="30dp"
+        android:padding="5dp"
+        android:text="Modify"
+        android:textSize="11sp" />
 </LinearLayout>

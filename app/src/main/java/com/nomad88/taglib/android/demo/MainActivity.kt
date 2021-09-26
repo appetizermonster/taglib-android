@@ -1,8 +1,15 @@
 package com.nomad88.taglib.android.demo
 
 import android.Manifest
+import android.app.Activity
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.widget.Toast
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
@@ -33,6 +40,8 @@ class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModel()
     private lateinit var binding: ActivityMainBinding
 
+    private var musicItemToWrite: MusicItem? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -52,6 +61,7 @@ class MainActivity : AppCompatActivity() {
                     title(it.title)
                     filePath(it.filePath)
                     onClick { _ -> onMusicItemClick(it.filePath) }
+                    onModifyClick { _ -> onModifyMusicItemClick(it) }
                 }
             }
         }
@@ -128,6 +138,7 @@ class MainActivity : AppCompatActivity() {
         val disc = tag?.disc()
         val lyrics = tag?.lyrics()
         val bitrate = audioProps?.bitrate()
+        val sampleRate = audioProps?.sampleRate()
         mp4File.close()
 
         val details = "Title: $title\n" +
@@ -139,12 +150,92 @@ class MainActivity : AppCompatActivity() {
                 "Track: $track\n" +
                 "Disc: $disc\n" +
                 "Lyrics: $lyrics\n" +
-                "Bitrate: $bitrate\n"
+                "Bitrate: $bitrate\n" +
+                "SampleRate: $sampleRate\n"
         val dialog = MaterialAlertDialogBuilder(this)
             .setTitle(filePath)
             .setMessage(details)
             .setPositiveButton("Close") { _, _ -> }
             .create()
         dialog.show()
+    }
+
+    private fun onModifyMusicItemClick(musicItem: MusicItem) {
+        val dialog = MaterialAlertDialogBuilder(this)
+            .setTitle(musicItem.filePath)
+            .setMessage("Do you want to modify this file?")
+            .setPositiveButton("Yes") { _, _ -> modifyMusicItemFile(musicItem) }
+            .setNegativeButton("No") { _, _ -> }
+            .create()
+        dialog.show()
+    }
+
+    private fun modifyMusicItemFile(musicItem: MusicItem) {
+        musicItemToWrite = musicItem
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val hasPermission = checkUriPermission(
+                musicItem.contentUri,
+                android.os.Process.myPid(),
+                android.os.Process.myUid(),
+                Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+            ) == PackageManager.PERMISSION_GRANTED
+            if (hasPermission) {
+                onWritePermissionGranted()
+            } else {
+                val writeRequestIntent =
+                    MediaStore.createWriteRequest(contentResolver, listOf(musicItem.contentUri))
+                val request = IntentSenderRequest.Builder(writeRequestIntent).build()
+                writePermissionContract.launch(request)
+            }
+        } else {
+            Dexter.withContext(this)
+                .withPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .withListener(object : PermissionListener {
+                    override fun onPermissionGranted(response: PermissionGrantedResponse) {
+                        onWritePermissionGranted()
+                    }
+
+                    override fun onPermissionDenied(response: PermissionDeniedResponse) {
+                        onWritePermissionDenied()
+                    }
+
+                    override fun onPermissionRationaleShouldBeShown(
+                        request: PermissionRequest,
+                        token: PermissionToken
+                    ) {
+                        token.continuePermissionRequest()
+                    }
+                }).check()
+        }
+    }
+
+    private fun onWritePermissionGranted() {
+        val musicItem = musicItemToWrite
+        musicItemToWrite = null
+
+        if (musicItem == null) {
+            Toast.makeText(this, "No music item to write", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        viewModel.modifyMusicItemFile(musicItem) { success ->
+            Toast.makeText(this, "Modified: success: $success", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun onWritePermissionDenied() {
+        Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
+        musicItemToWrite = null
+    }
+
+    private val writePermissionContract = registerForActivityResult(
+        ActivityResultContracts.StartIntentSenderForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            onWritePermissionGranted()
+        } else {
+            onWritePermissionDenied()
+        }
     }
 }

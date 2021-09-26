@@ -13,12 +13,15 @@ class MusicItemView(context: Context) : FrameLayout(context) {
 
     var onClick: OnClickListener? = null
         @CallbackProp set
+    var onModifyClick: OnClickListener? = null
+        @CallbackProp set
 
     private val binding =
         EpoxyMusicItemViewBinding.inflate(LayoutInflater.from(context), this, true)
 
     init {
         binding.root.setOnClickListener { onClick?.onClick(this) }
+        binding.modifyButton.setOnClickListener { onModifyClick?.onClick(it) }
     }
 
     @TextProp

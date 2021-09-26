@@ -41,6 +41,11 @@ class MP4File private constructor(
 
     companion object {
         @JvmStatic
+        fun isSupported(filePath: String): Boolean {
+            return TagLib.mp4File_isSupported(filePath)
+        }
+
+        @JvmStatic
         fun create(filePath: String): MP4File? {
             val ptr = TagLib.mp4File_create(filePath)
             return if (ptr == 0L) null else MP4File(filePath, ptr)
