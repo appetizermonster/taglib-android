@@ -2,8 +2,19 @@ package com.nomad88.taglib.android;
 
 final class TagLib {
 
+    private static boolean _isLibraryLoaded;
+
     static {
-        System.loadLibrary("taglibwrapper");
+        try {
+            System.loadLibrary("taglibwrapper");
+            _isLibraryLoaded = true;
+        } catch (Throwable e) {
+            _isLibraryLoaded = false;
+        }
+    }
+
+    public static boolean isLibraryLoaded() {
+        return _isLibraryLoaded;
     }
 
     // MP4::File
