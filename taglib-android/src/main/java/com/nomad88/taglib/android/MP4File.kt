@@ -1,5 +1,7 @@
 package com.nomad88.taglib.android
 
+import android.util.Log
+
 class MP4File private constructor(
     val filePath: String,
     private var ptr: Long
@@ -7,6 +9,12 @@ class MP4File private constructor(
 
     private var tagInstance: MP4Tag? = null
     private var audioPropertiesInstance: AudioProperties? = null
+
+    init {
+        if (TagLibAndroid.DEBUG) {
+            Log.d(TAG, "file created: $filePath / ptr: $ptr")
+        }
+    }
 
     fun tag(): MP4Tag? {
         if (ptr == 0L) return null
@@ -35,11 +43,18 @@ class MP4File private constructor(
         tagInstance?.close()
         tagInstance = null
 
+        val orgPtr = ptr
         TagLib.mp4File_release(ptr)
         ptr = 0L
+
+        if (TagLibAndroid.DEBUG) {
+            Log.d(TAG, "file closed: ptr: $orgPtr")
+        }
     }
 
     companion object {
+        private const val TAG = "TagLib::MP4File"
+
         @JvmStatic
         fun isSupported(filePath: String): Boolean {
             return if (TagLib.isLibraryLoaded())
