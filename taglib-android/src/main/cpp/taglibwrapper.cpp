@@ -22,7 +22,7 @@ static const string EMPTY_STR;
 extern "C" JNIEXPORT jboolean JNICALL
 Java_com_nomad88_taglib_android_TagLib_mp4File_1isSupported(JNIEnv *env, jclass, jstring filePath) {
     auto filePathChars = env->GetStringUTFChars(filePath, nullptr);
-    auto fileStream = new FileStream(filePathChars);
+    auto fileStream = new FileStream(filePathChars, true);
     auto isMP4File = MP4::File::isSupported(fileStream);
     delete fileStream;
     env->ReleaseStringUTFChars(filePath, filePathChars);
