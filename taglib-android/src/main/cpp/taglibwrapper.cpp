@@ -30,16 +30,15 @@ Java_com_nomad88_taglib_android_TagLib_mp4File_1isSupported(JNIEnv *env, jclass,
 }
 
 extern "C" JNIEXPORT jlong JNICALL
-Java_com_nomad88_taglib_android_TagLib_mp4File_1create(JNIEnv *env, jclass, jstring filePath) {
+Java_com_nomad88_taglib_android_TagLib_mp4File_1create(JNIEnv *env, jclass, jstring filePath,
+                                                       jboolean readAudioProperties) {
     auto filePathChars = env->GetStringUTFChars(filePath, nullptr);
-    auto fileStream = new FileStream(filePathChars);
-    auto isMP4File = MP4::File::isSupported(fileStream);
-    MP4::File *instance = nullptr;
-    if (isMP4File) {
-        instance = new MP4::File(filePathChars);
-    }
-    delete fileStream;
+    auto *instance = new MP4::File(filePathChars, readAudioProperties);
     env->ReleaseStringUTFChars(filePath, filePathChars);
+    if (!instance->isValid()) {
+        delete instance;
+        instance = nullptr;
+    }
     return reinterpret_cast<jlong>(instance);
 }
 

@@ -20,7 +20,7 @@ final class TagLib {
     // MP4::File
     public static native boolean mp4File_isSupported(String filePath);
 
-    public static native long mp4File_create(String filePath);
+    public static native long mp4File_create(String filePath, boolean readAudioProperties);
 
     public static native void mp4File_release(long ptr);
 

@@ -48,11 +48,11 @@ class MP4File private constructor(
         }
 
         @JvmStatic
-        fun create(filePath: String): MP4File? {
+        fun create(filePath: String, readAudioProperties: Boolean = true): MP4File? {
             if (!TagLib.isLibraryLoaded()) {
                 return null
             }
-            val ptr = TagLib.mp4File_create(filePath)
+            val ptr = TagLib.mp4File_create(filePath, readAudioProperties)
             return if (ptr == 0L) null else MP4File(filePath, ptr)
         }
     }

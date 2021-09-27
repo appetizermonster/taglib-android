@@ -120,7 +120,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun onMusicItemClick(filePath: String) {
         Timber.d("onMusicItemClick: $filePath")
-        val mp4File = MP4File.create(filePath)
+        val mp4File = MP4File.create(filePath, readAudioProperties = true)
         if (mp4File == null) {
             Toast.makeText(this, "Not MP4 File", Toast.LENGTH_SHORT).show()
             return
