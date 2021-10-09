@@ -1,5 +1,7 @@
 package com.nomad88.taglib.android;
 
+import android.util.Log;
+
 final class TagLib {
 
     private static boolean _isLibraryLoaded;
@@ -8,8 +10,14 @@ final class TagLib {
         try {
             System.loadLibrary("taglibwrapper");
             _isLibraryLoaded = true;
+            if (TagLibAndroid.DEBUG) {
+                Log.d("TagLib", "Library loaded");
+            }
         } catch (Throwable e) {
             _isLibraryLoaded = false;
+            if (TagLibAndroid.DEBUG) {
+                Log.d("TagLib", "Failed to load library");
+            }
         }
     }
 
