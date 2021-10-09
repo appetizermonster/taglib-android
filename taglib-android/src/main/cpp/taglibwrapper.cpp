@@ -136,7 +136,7 @@ Java_com_nomad88_taglib_android_TagLib_mp4Tag_1setTitle(JNIEnv *env, jclass, jlo
                                                         jstring title) {
     auto instance = reinterpret_cast<Tag *>(ptr);
     auto titleChars = env->GetStringUTFChars(title, nullptr);
-    instance->setTitle(String(titleChars));
+    instance->setTitle(String(titleChars, String::UTF8));
     env->ReleaseStringUTFChars(title, titleChars);
 }
 
@@ -145,7 +145,7 @@ Java_com_nomad88_taglib_android_TagLib_mp4Tag_1setArtist(JNIEnv *env, jclass, jl
                                                          jstring artist) {
     auto instance = reinterpret_cast<Tag *>(ptr);
     auto artistChars = env->GetStringUTFChars(artist, nullptr);
-    instance->setArtist(String(artistChars));
+    instance->setArtist(String(artistChars, String::UTF8));
     env->ReleaseStringUTFChars(artist, artistChars);
 }
 
@@ -154,7 +154,7 @@ Java_com_nomad88_taglib_android_TagLib_mp4Tag_1setAlbum(JNIEnv *env, jclass, jlo
                                                         jstring album) {
     auto instance = reinterpret_cast<Tag *>(ptr);
     auto albumChars = env->GetStringUTFChars(album, nullptr);
-    instance->setAlbum(String(albumChars));
+    instance->setAlbum(String(albumChars, String::UTF8));
     env->ReleaseStringUTFChars(album, albumChars);
 }
 
@@ -163,7 +163,7 @@ Java_com_nomad88_taglib_android_TagLib_mp4Tag_1setAlbumArtist(JNIEnv *env, jclas
                                                               jstring albumArtist) {
     auto instance = reinterpret_cast<MP4::Tag *>(ptr);
     auto albumArtistChars = env->GetStringUTFChars(albumArtist, nullptr);
-    auto albumArtistStr = String(albumArtistChars);
+    auto albumArtistStr = String(albumArtistChars, String::UTF8);
     if (albumArtistStr.isEmpty()) {
         instance->removeItem("aART");
     } else {
@@ -177,7 +177,7 @@ Java_com_nomad88_taglib_android_TagLib_mp4Tag_1setGenre(JNIEnv *env, jclass, jlo
                                                         jstring genre) {
     auto instance = reinterpret_cast<Tag *>(ptr);
     auto genreChars = env->GetStringUTFChars(genre, nullptr);
-    instance->setGenre(String(genreChars));
+    instance->setGenre(String(genreChars, String::UTF8));
     env->ReleaseStringUTFChars(genre, genreChars);
 }
 
@@ -211,7 +211,7 @@ Java_com_nomad88_taglib_android_TagLib_mp4Tag_1setLyrics(JNIEnv *env, jclass, jl
                                                          jstring lyrics) {
     auto instance = reinterpret_cast<MP4::Tag *>(ptr);
     auto lyricsChars = env->GetStringUTFChars(lyrics, nullptr);
-    auto lyricsStr = String(lyricsChars);
+    auto lyricsStr = String(lyricsChars, String::UTF8);
     if (lyricsStr.isEmpty()) {
         instance->removeItem("\251lyr");
     } else {

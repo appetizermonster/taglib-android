@@ -105,15 +105,15 @@ class MainViewModel(
                 val mp4File = MP4File.create(editingFile.absolutePath) ?: return@modifyFile false
                 val tag = mp4File.tag()
                 val result = tag?.run {
-                    setTitle("new title!!")
-                    setArtist("new artist!!")
-                    setAlbum("new album!!")
-                    setAlbumArtist("new album artist")
-                    setGenre("new genre")
+                    setTitle("new title, 새로운 제목")
+                    setArtist("new artist, 새로운 아티스트")
+                    setAlbum("new album, 새 앨범")
+                    setAlbumArtist("new album artist, 새 앨범 아티스트")
+                    setGenre("new genre, 새 장르")
                     setYear(2021)
                     setTrack(Random.nextInt(1, 100))
                     setDisc(Random.nextInt(1, 20))
-                    setLyrics("new lyrics: ${System.currentTimeMillis()}")
+                    setLyrics("new lyrics: ${System.currentTimeMillis()}, 가사")
                     save()
                 } ?: false
                 mp4File.close()
