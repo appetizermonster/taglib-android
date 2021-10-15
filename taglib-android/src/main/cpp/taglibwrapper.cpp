@@ -64,21 +64,21 @@ Java_com_nomad88_taglib_android_TagLib_mp4File_1audioProperties(JNIEnv *env, jcl
 extern "C" JNIEXPORT jstring JNICALL
 Java_com_nomad88_taglib_android_TagLib_mp4Tag_1title(JNIEnv *env, jclass, jlong ptr) {
     auto instance = reinterpret_cast<Tag *>(ptr);
-    auto ret = instance->title();
+    const auto &ret = instance->title();
     return env->NewStringUTF(ret.to8Bit(true).c_str());
 }
 
 extern "C" JNIEXPORT jstring JNICALL
 Java_com_nomad88_taglib_android_TagLib_mp4Tag_1artist(JNIEnv *env, jclass, jlong ptr) {
     auto instance = reinterpret_cast<Tag *>(ptr);
-    auto ret = instance->artist();
+    const auto &ret = instance->artist();
     return env->NewStringUTF(ret.to8Bit(true).c_str());
 }
 
 extern "C" JNIEXPORT jstring JNICALL
 Java_com_nomad88_taglib_android_TagLib_mp4Tag_1album(JNIEnv *env, jclass, jlong ptr) {
     auto instance = reinterpret_cast<Tag *>(ptr);
-    auto ret = instance->album();
+    const auto &ret = instance->album();
     return env->NewStringUTF(ret.to8Bit(true).c_str());
 }
 
@@ -86,7 +86,7 @@ extern "C" JNIEXPORT jstring JNICALL
 Java_com_nomad88_taglib_android_TagLib_mp4Tag_1albumArtist(JNIEnv *env, jclass, jlong ptr) {
     auto instance = reinterpret_cast<MP4::Tag *>(ptr);
     if (instance->contains("aART")) {
-        auto ret = instance->item("aART").toStringList().toString(", ");
+        const auto &ret = instance->item("aART").toStringList().toString(", ");
         return env->NewStringUTF(ret.to8Bit(true).c_str());
     }
     return env->NewStringUTF(EMPTY_STR.c_str());
@@ -95,7 +95,7 @@ Java_com_nomad88_taglib_android_TagLib_mp4Tag_1albumArtist(JNIEnv *env, jclass, 
 extern "C" JNIEXPORT jstring JNICALL
 Java_com_nomad88_taglib_android_TagLib_mp4Tag_1genre(JNIEnv *env, jclass, jlong ptr) {
     auto instance = reinterpret_cast<Tag *>(ptr);
-    auto ret = instance->genre();
+    const auto &ret = instance->genre();
     return env->NewStringUTF(ret.to8Bit(true).c_str());
 }
 
@@ -125,7 +125,7 @@ extern "C" JNIEXPORT jstring JNICALL
 Java_com_nomad88_taglib_android_TagLib_mp4Tag_1lyrics(JNIEnv *env, jclass, jlong ptr) {
     auto instance = reinterpret_cast<MP4::Tag *>(ptr);
     if (instance->contains("\251lyr")) {
-        auto ret = instance->item("\251lyr").toStringList().toString(", ");
+        const auto &ret = instance->item("\251lyr").toStringList().toString(", ");
         return env->NewStringUTF(ret.to8Bit(true).c_str());
     }
     return env->NewStringUTF(EMPTY_STR.c_str());
@@ -135,7 +135,7 @@ extern "C" JNIEXPORT void JNICALL
 Java_com_nomad88_taglib_android_TagLib_mp4Tag_1setTitle(JNIEnv *env, jclass, jlong ptr,
                                                         jstring title) {
     auto instance = reinterpret_cast<Tag *>(ptr);
-    auto titleChars = env->GetStringUTFChars(title, nullptr);
+    const auto titleChars = env->GetStringUTFChars(title, nullptr);
     instance->setTitle(String(titleChars, String::UTF8));
     env->ReleaseStringUTFChars(title, titleChars);
 }
@@ -144,7 +144,7 @@ extern "C" JNIEXPORT void JNICALL
 Java_com_nomad88_taglib_android_TagLib_mp4Tag_1setArtist(JNIEnv *env, jclass, jlong ptr,
                                                          jstring artist) {
     auto instance = reinterpret_cast<Tag *>(ptr);
-    auto artistChars = env->GetStringUTFChars(artist, nullptr);
+    const auto artistChars = env->GetStringUTFChars(artist, nullptr);
     instance->setArtist(String(artistChars, String::UTF8));
     env->ReleaseStringUTFChars(artist, artistChars);
 }
@@ -153,7 +153,7 @@ extern "C" JNIEXPORT void JNICALL
 Java_com_nomad88_taglib_android_TagLib_mp4Tag_1setAlbum(JNIEnv *env, jclass, jlong ptr,
                                                         jstring album) {
     auto instance = reinterpret_cast<Tag *>(ptr);
-    auto albumChars = env->GetStringUTFChars(album, nullptr);
+    const auto albumChars = env->GetStringUTFChars(album, nullptr);
     instance->setAlbum(String(albumChars, String::UTF8));
     env->ReleaseStringUTFChars(album, albumChars);
 }
@@ -162,8 +162,8 @@ extern "C" JNIEXPORT void JNICALL
 Java_com_nomad88_taglib_android_TagLib_mp4Tag_1setAlbumArtist(JNIEnv *env, jclass, jlong ptr,
                                                               jstring albumArtist) {
     auto instance = reinterpret_cast<MP4::Tag *>(ptr);
-    auto albumArtistChars = env->GetStringUTFChars(albumArtist, nullptr);
-    auto albumArtistStr = String(albumArtistChars, String::UTF8);
+    const auto albumArtistChars = env->GetStringUTFChars(albumArtist, nullptr);
+    const String albumArtistStr(albumArtistChars, String::UTF8);
     if (albumArtistStr.isEmpty()) {
         instance->removeItem("aART");
     } else {
@@ -176,7 +176,7 @@ extern "C" JNIEXPORT void JNICALL
 Java_com_nomad88_taglib_android_TagLib_mp4Tag_1setGenre(JNIEnv *env, jclass, jlong ptr,
                                                         jstring genre) {
     auto instance = reinterpret_cast<Tag *>(ptr);
-    auto genreChars = env->GetStringUTFChars(genre, nullptr);
+    const auto genreChars = env->GetStringUTFChars(genre, nullptr);
     instance->setGenre(String(genreChars, String::UTF8));
     env->ReleaseStringUTFChars(genre, genreChars);
 }
@@ -210,8 +210,8 @@ extern "C" JNIEXPORT void JNICALL
 Java_com_nomad88_taglib_android_TagLib_mp4Tag_1setLyrics(JNIEnv *env, jclass, jlong ptr,
                                                          jstring lyrics) {
     auto instance = reinterpret_cast<MP4::Tag *>(ptr);
-    auto lyricsChars = env->GetStringUTFChars(lyrics, nullptr);
-    auto lyricsStr = String(lyricsChars, String::UTF8);
+    const auto lyricsChars = env->GetStringUTFChars(lyrics, nullptr);
+    const String lyricsStr(lyricsChars, String::UTF8);
     if (lyricsStr.isEmpty()) {
         instance->removeItem("\251lyr");
     } else {
