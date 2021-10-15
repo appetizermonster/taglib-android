@@ -55,6 +55,10 @@ final class TagLib {
 
     public static native String mp4Tag_lyrics(long ptr);
 
+    public static native int mp4Tag_coverArtFormat(long ptr);
+
+    public static native byte[] mp4Tag_coverArtData(long ptr);
+
     public static native void mp4Tag_setTitle(long ptr, String title);
 
     public static native void mp4Tag_setArtist(long ptr, String artist);
@@ -72,6 +76,10 @@ final class TagLib {
     public static native void mp4Tag_setDisc(long ptr, int disc);
 
     public static native void mp4Tag_setLyrics(long ptr, String lyrics);
+
+    public static native void mp4Tag_setCoverArt(long ptr, int format, byte[] data);
+
+    public static native void mp4Tag_deleteCoverArt(long ptr);
 
     public static native boolean mp4Tag_save(long ptr);
 

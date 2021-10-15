@@ -47,6 +47,16 @@ class MP4Tag internal constructor(internal var ptr: Long) : AutoCloseable {
         return TagLib.mp4Tag_lyrics(ptr)
     }
 
+    fun coverArtFormat(): CoverArtFormat? {
+        if (ptr == 0L) return null
+        return CoverArtFormat.fromNativeValue(TagLib.mp4Tag_coverArtFormat(ptr))
+    }
+
+    fun coverArtData(): ByteArray? {
+        if (ptr == 0L) return null
+        return TagLib.mp4Tag_coverArtData(ptr)
+    }
+
     fun setTitle(title: String) {
         if (ptr == 0L) return
         TagLib.mp4Tag_setTitle(ptr, title)
@@ -90,6 +100,16 @@ class MP4Tag internal constructor(internal var ptr: Long) : AutoCloseable {
     fun setLyrics(lyrics: String) {
         if (ptr == 0L) return
         TagLib.mp4Tag_setLyrics(ptr, lyrics)
+    }
+
+    fun setCoverArt(format: CoverArtFormat, data: ByteArray) {
+        if (ptr == 0L) return
+        TagLib.mp4Tag_setCoverArt(ptr, format.nativeValue, data)
+    }
+
+    fun deleteCoverArt() {
+        if (ptr == 0L) return
+        TagLib.mp4Tag_deleteCoverArt(ptr)
     }
 
     fun save(): Boolean {

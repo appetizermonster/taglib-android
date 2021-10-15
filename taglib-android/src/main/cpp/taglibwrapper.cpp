@@ -131,6 +131,36 @@ Java_com_nomad88_taglib_android_TagLib_mp4Tag_1lyrics(JNIEnv *env, jclass, jlong
     return env->NewStringUTF(EMPTY_STR.c_str());
 }
 
+extern "C" JNIEXPORT jint JNICALL
+Java_com_nomad88_taglib_android_TagLib_mp4Tag_1coverArtFormat(JNIEnv *env, jclass, jlong ptr) {
+    auto instance = reinterpret_cast<MP4::Tag *>(ptr);
+    if (instance->contains("covr")) {
+        const auto &coverArtList = instance->item("covr").toCoverArtList();
+        if (!coverArtList.isEmpty()) {
+            const auto &coverArt = coverArtList.front();
+            return static_cast<int>(coverArt.format());
+        }
+    }
+    return -1;
+}
+
+extern "C" JNIEXPORT jbyteArray JNICALL
+Java_com_nomad88_taglib_android_TagLib_mp4Tag_1coverArtData(JNIEnv *env, jclass, jlong ptr) {
+    auto instance = reinterpret_cast<MP4::Tag *>(ptr);
+    if (instance->contains("covr")) {
+        const auto &coverArtList = instance->item("covr").toCoverArtList();
+        if (!coverArtList.isEmpty()) {
+            const auto &coverArt = coverArtList.front();
+            const auto &data = coverArt.data();
+            auto ret = env->NewByteArray(data.size());
+            env->SetByteArrayRegion(ret, 0, data.size(),
+                                    reinterpret_cast<const jbyte *>(data.data()));
+            return ret;
+        }
+    }
+    return nullptr;
+}
+
 extern "C" JNIEXPORT void JNICALL
 Java_com_nomad88_taglib_android_TagLib_mp4Tag_1setTitle(JNIEnv *env, jclass, jlong ptr,
                                                         jstring title) {
@@ -218,6 +248,27 @@ Java_com_nomad88_taglib_android_TagLib_mp4Tag_1setLyrics(JNIEnv *env, jclass, jl
         instance->setItem("\251lyr", StringList(lyricsStr));
     }
     env->ReleaseStringUTFChars(lyrics, lyricsChars);
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_nomad88_taglib_android_TagLib_mp4Tag_1setCoverArt(JNIEnv *env, jclass, jlong ptr,
+                                                           jint format, jbyteArray data) {
+    auto instance = reinterpret_cast<MP4::Tag *>(ptr);
+    const auto dataBytes = env->GetByteArrayElements(data, nullptr);
+    const auto dataSize = env->GetArrayLength(data);
+    const ByteVector byteVector(reinterpret_cast<const char *>(dataBytes),
+                                static_cast<unsigned int>(dataSize));
+    const MP4::CoverArt coverArt(static_cast<MP4::CoverArt::Format>(format), byteVector);
+    MP4::CoverArtList coverArtList;
+    coverArtList.append(coverArt);
+    instance->setItem("covr", coverArtList);
+    env->ReleaseByteArrayElements(data, dataBytes, JNI_ABORT);
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_nomad88_taglib_android_TagLib_mp4Tag_1deleteCoverArt(JNIEnv *env, jclass, jlong ptr) {
+    auto instance = reinterpret_cast<MP4::Tag *>(ptr);
+    instance->removeItem("covr");
 }
 
 extern "C" JNIEXPORT jboolean JNICALL
