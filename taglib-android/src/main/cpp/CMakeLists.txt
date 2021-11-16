@@ -16,7 +16,7 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/taglib/bindings/c/
 )
 
-add_library(taglibwrapper SHARED taglibwrapper.cpp)
+add_library(taglibwrapper SHARED taglib_mp4file.cpp taglib_mp4tag.cpp taglib_audioproperties.cpp)
 
 find_library(log-lib log)
 target_link_libraries(taglibwrapper tag ${log-lib})
