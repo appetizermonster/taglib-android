@@ -116,11 +116,6 @@ class Tag internal constructor(
         nativeDelegate.deleteCoverArt(ptr)
     }
 
-    fun save(): Boolean {
-        if (ptr == 0L) return false
-        return nativeDelegate.save(ptr)
-    }
-
     fun close() {
         ptr = 0L
     }

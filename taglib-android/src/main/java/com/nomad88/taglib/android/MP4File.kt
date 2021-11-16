@@ -5,7 +5,7 @@ import com.nomad88.taglib.android.internal.*
 class MP4File private constructor(
     filePath: String,
     ptr: Long
-) : AbstractFile("TagLib::MP4File", filePath, ptr) {
+) : TagFile("TagLib::MP4File", filePath, ptr) {
 
     override val nativeDelegate: FileNativeDelegate = MP4FileNative
     override val tagNativeDelegate: TagNativeDelegate = MP4TagNative

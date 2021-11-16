@@ -37,6 +37,12 @@ Java_com_nomad88_taglib_android_internal_MP4FileNative_release(JNIEnv *env, jobj
     delete instance;
 }
 
+extern "C" JNIEXPORT jboolean JNICALL
+Java_com_nomad88_taglib_android_internal_MP4FileNative_save(JNIEnv *env, jobject, jlong ptr) {
+    auto *instance = reinterpret_cast<MP4::File *>(ptr);
+    return static_cast<jboolean>(instance->save());
+}
+
 extern "C" JNIEXPORT jlong JNICALL
 Java_com_nomad88_taglib_android_internal_MP4FileNative_tag(JNIEnv *env, jobject, jlong ptr) {
     auto instance = reinterpret_cast<MP4::File *>(ptr);

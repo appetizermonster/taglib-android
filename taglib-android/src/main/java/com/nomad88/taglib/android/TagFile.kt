@@ -1,11 +1,10 @@
-package com.nomad88.taglib.android.internal
+package com.nomad88.taglib.android
 
 import android.util.Log
-import com.nomad88.taglib.android.AudioProperties
-import com.nomad88.taglib.android.Tag
-import com.nomad88.taglib.android.TagLibAndroid
+import com.nomad88.taglib.android.internal.FileNativeDelegate
+import com.nomad88.taglib.android.internal.TagNativeDelegate
 
-abstract class AbstractFile internal constructor(
+abstract class TagFile internal constructor(
     private val debugTag: String,
     val filePath: String,
     private var ptr: Long
@@ -42,6 +41,11 @@ abstract class AbstractFile internal constructor(
             audioPropertiesInstance = newInstance
             newInstance
         }
+    }
+
+    fun save(): Boolean {
+        if (ptr == 0L) return false
+        return nativeDelegate.save(ptr)
     }
 
     override fun close() {

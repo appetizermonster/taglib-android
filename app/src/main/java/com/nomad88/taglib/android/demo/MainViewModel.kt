@@ -8,6 +8,7 @@ import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.nomad88.taglib.android.MP4File
+import com.nomad88.taglib.android.OggVorbisFile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -95,16 +96,22 @@ class MainViewModel(
 
     fun modifyMusicItemFile(musicItem: MusicItem, onComplete: (success: Boolean) -> Unit) =
         viewModelScope.launch(Dispatchers.IO) {
-            if (!MP4File.isSupported(musicItem.filePath)) {
+            val isMP4 = MP4File.isSupported(musicItem.filePath)
+            val isOggVorbis = OggVorbisFile.isSupported(musicItem.filePath)
+            if (!isMP4 && !isOggVorbis) {
                 withContext(Dispatchers.Main) { onComplete(false) }
                 return@launch
             }
 
             val file = File(musicItem.filePath)
             val success = modifyFile(musicItem.contentUri, file) { editingFile ->
-                val mp4File = MP4File.create(editingFile.absolutePath) ?: return@modifyFile false
-                val tag = mp4File.tag()
-                val result = tag?.run {
+                val tagFile = when {
+                    isMP4 -> MP4File.create(editingFile.absolutePath)
+                    isOggVorbis -> OggVorbisFile.create(editingFile.absolutePath)
+                    else -> null
+                } ?: return@modifyFile false
+                val tag = tagFile.tag()
+                tag?.run {
                     setTitle("new title, 새로운 제목")
                     setArtist("new artist, 새로운 아티스트")
                     setAlbum("new album, 새 앨범")
@@ -114,9 +121,9 @@ class MainViewModel(
                     setTrack(Random.nextInt(1, 100))
                     setDisc(Random.nextInt(1, 20))
                     setLyrics("new lyrics: ${System.currentTimeMillis()}, 가사")
-                    save()
-                } ?: false
-                mp4File.close()
+                }
+                val result = tagFile.save()
+                tagFile.close()
                 result
             }
             withContext(Dispatchers.Main) { onComplete(success) }

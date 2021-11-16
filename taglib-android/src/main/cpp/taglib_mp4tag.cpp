@@ -86,7 +86,7 @@ Java_com_nomad88_taglib_android_internal_MP4TagNative_coverArtFormat(JNIEnv *env
         const auto &coverArtList = instance->item("covr").toCoverArtList();
         if (!coverArtList.isEmpty()) {
             const auto &coverArt = coverArtList.front();
-            return static_cast<int>(coverArt.format());
+            return static_cast<jint>(coverArt.format());
         }
     }
     return -1;
@@ -220,10 +220,4 @@ Java_com_nomad88_taglib_android_internal_MP4TagNative_deleteCoverArt(JNIEnv *env
                                                                      jlong ptr) {
     auto instance = reinterpret_cast<MP4::Tag *>(ptr);
     instance->removeItem("covr");
-}
-
-extern "C" JNIEXPORT jboolean JNICALL
-Java_com_nomad88_taglib_android_internal_MP4TagNative_save(JNIEnv *env, jobject, jlong ptr) {
-    auto instance = reinterpret_cast<MP4::Tag *>(ptr);
-    return static_cast<jboolean>(instance->save());
 }

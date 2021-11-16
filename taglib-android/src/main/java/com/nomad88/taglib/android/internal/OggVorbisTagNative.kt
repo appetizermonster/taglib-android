@@ -1,6 +1,6 @@
 package com.nomad88.taglib.android.internal
 
-internal object MP4TagNative : TagNativeDelegate {
+internal object OggVorbisTagNative : TagNativeDelegate {
 
     init {
         TagLib.ensureLoaded()

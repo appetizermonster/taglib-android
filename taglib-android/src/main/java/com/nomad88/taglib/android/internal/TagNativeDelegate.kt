@@ -23,5 +23,4 @@ internal interface TagNativeDelegate {
     fun setLyrics(ptr: Long, lyrics: String)
     fun setCoverArt(ptr: Long, format: Int, data: ByteArray)
     fun deleteCoverArt(ptr: Long)
-    fun save(ptr: Long): Boolean
 }

@@ -13,6 +13,9 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/taglib/taglib/mpeg/id3v1
     ${CMAKE_CURRENT_SOURCE_DIR}/taglib/taglib/mpeg/id3v2
     ${CMAKE_CURRENT_SOURCE_DIR}/taglib/taglib/mpeg/id3v2/frames
+    ${CMAKE_CURRENT_SOURCE_DIR}/taglib/taglib/ogg
+    ${CMAKE_CURRENT_SOURCE_DIR}/taglib/taglib/ogg/vorbis
+    ${CMAKE_CURRENT_SOURCE_DIR}/taglib/taglib/flac
     ${CMAKE_CURRENT_SOURCE_DIR}/taglib/bindings/c/
 )
 
@@ -20,6 +23,8 @@ add_library(
     taglibwrapper SHARED
     taglib_mp4file.cpp
     taglib_mp4tag.cpp
+    taglib_oggvorbisfile.cpp
+    taglib_oggvorbistag.cpp
     taglib_audioproperties.cpp
 )
 

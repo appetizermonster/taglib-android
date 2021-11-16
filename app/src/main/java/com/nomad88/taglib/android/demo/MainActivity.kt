@@ -26,6 +26,7 @@ import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 import com.nomad88.taglib.android.MP4File
+import com.nomad88.taglib.android.OggVorbisFile
 import com.nomad88.taglib.android.demo.databinding.ActivityMainBinding
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.debounce
@@ -120,14 +121,21 @@ class MainActivity : AppCompatActivity() {
 
     private fun onMusicItemClick(filePath: String) {
         Timber.d("onMusicItemClick: $filePath")
-        val mp4File = MP4File.create(filePath, readAudioProperties = true)
-        if (mp4File == null) {
-            Toast.makeText(this, "Not MP4 File", Toast.LENGTH_SHORT).show()
+        val isMP4 = MP4File.isSupported(filePath)
+        val isOggVorbis = OggVorbisFile.isSupported(filePath)
+
+        val tagFile = when {
+            isMP4 -> MP4File.create(filePath, readAudioProperties = true)
+            isOggVorbis -> OggVorbisFile.create(filePath, readAudioProperties = true)
+            else -> null
+        }
+        if (tagFile == null) {
+            Toast.makeText(this, "Not MP4/OGG File", Toast.LENGTH_SHORT).show()
             return
         }
 
-        val tag = mp4File.tag()
-        val audioProps = mp4File.audioProperties()
+        val tag = tagFile.tag()
+        val audioProps = tagFile.audioProperties()
         val title = tag?.title()
         val artist = tag?.artist()
         val album = tag?.album()
@@ -139,7 +147,7 @@ class MainActivity : AppCompatActivity() {
         val lyrics = tag?.lyrics()
         val bitrate = audioProps?.bitrate()
         val sampleRate = audioProps?.sampleRate()
-        mp4File.close()
+        tagFile.close()
 
         val details = "Title: $title\n" +
                 "Artist: $artist\n" +
