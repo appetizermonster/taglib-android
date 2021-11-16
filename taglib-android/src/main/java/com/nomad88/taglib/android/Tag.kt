@@ -1,123 +1,127 @@
 package com.nomad88.taglib.android
 
-class MP4Tag internal constructor(internal var ptr: Long) : AutoCloseable {
+import com.nomad88.taglib.android.internal.TagNativeDelegate
 
+class Tag internal constructor(
+    internal var ptr: Long = 0L,
+    private val nativeDelegate: TagNativeDelegate
+) {
     fun title(): String {
         if (ptr == 0L) return ""
-        return TagLib.mp4Tag_title(ptr)
+        return nativeDelegate.title(ptr)
     }
 
     fun artist(): String {
         if (ptr == 0L) return ""
-        return TagLib.mp4Tag_artist(ptr)
+        return nativeDelegate.artist(ptr)
     }
 
     fun album(): String {
         if (ptr == 0L) return ""
-        return TagLib.mp4Tag_album(ptr)
+        return nativeDelegate.album(ptr)
     }
 
     fun albumArtist(): String {
         if (ptr == 0L) return ""
-        return TagLib.mp4Tag_albumArtist(ptr)
+        return nativeDelegate.albumArtist(ptr)
     }
 
     fun genre(): String {
         if (ptr == 0L) return ""
-        return TagLib.mp4Tag_genre(ptr)
+        return nativeDelegate.genre(ptr)
     }
 
     fun year(): Int {
         if (ptr == 0L) return -1
-        return TagLib.mp4Tag_year(ptr)
+        return nativeDelegate.year(ptr)
     }
 
     fun track(): Int {
         if (ptr == 0L) return -1
-        return TagLib.mp4Tag_track(ptr)
+        return nativeDelegate.track(ptr)
     }
 
     fun disc(): Int {
         if (ptr == 0L) return -1
-        return TagLib.mp4Tag_disc(ptr)
+        return nativeDelegate.disc(ptr)
     }
 
     fun lyrics(): String {
         if (ptr == 0L) return ""
-        return TagLib.mp4Tag_lyrics(ptr)
+        return nativeDelegate.lyrics(ptr)
     }
 
     fun coverArtFormat(): CoverArtFormat? {
         if (ptr == 0L) return null
-        return CoverArtFormat.fromNativeValue(TagLib.mp4Tag_coverArtFormat(ptr))
+        return CoverArtFormat.fromNativeValue(nativeDelegate.coverArtFormat(ptr))
     }
 
     fun coverArtData(): ByteArray? {
         if (ptr == 0L) return null
-        return TagLib.mp4Tag_coverArtData(ptr)
+        return nativeDelegate.coverArtData(ptr)
     }
 
     fun setTitle(title: String) {
         if (ptr == 0L) return
-        TagLib.mp4Tag_setTitle(ptr, title)
+        nativeDelegate.setTitle(ptr, title)
     }
 
     fun setArtist(artist: String) {
         if (ptr == 0L) return
-        TagLib.mp4Tag_setArtist(ptr, artist)
+        nativeDelegate.setArtist(ptr, artist)
     }
 
     fun setAlbum(album: String) {
         if (ptr == 0L) return
-        TagLib.mp4Tag_setAlbum(ptr, album)
+        nativeDelegate.setAlbum(ptr, album)
     }
 
     fun setAlbumArtist(albumArtist: String) {
         if (ptr == 0L) return
-        TagLib.mp4Tag_setAlbumArtist(ptr, albumArtist)
+        nativeDelegate.setAlbumArtist(ptr, albumArtist)
     }
 
     fun setGenre(genre: String) {
         if (ptr == 0L) return
-        TagLib.mp4Tag_setGenre(ptr, genre)
+        nativeDelegate.setGenre(ptr, genre)
     }
 
     fun setYear(year: Int) {
         if (ptr == 0L) return
-        TagLib.mp4Tag_setYear(ptr, year)
+        nativeDelegate.setYear(ptr, year)
     }
 
     fun setTrack(track: Int) {
         if (ptr == 0L) return
-        TagLib.mp4Tag_setTrack(ptr, track)
+        nativeDelegate.setTrack(ptr, track)
     }
 
     fun setDisc(disc: Int) {
         if (ptr == 0L) return
-        TagLib.mp4Tag_setDisc(ptr, disc)
+        nativeDelegate.setDisc(ptr, disc)
     }
 
     fun setLyrics(lyrics: String) {
         if (ptr == 0L) return
-        TagLib.mp4Tag_setLyrics(ptr, lyrics)
+        nativeDelegate.setLyrics(ptr, lyrics)
     }
 
     fun setCoverArt(format: CoverArtFormat, data: ByteArray) {
         if (ptr == 0L) return
-        TagLib.mp4Tag_setCoverArt(ptr, format.nativeValue, data)
+        nativeDelegate.setCoverArt(ptr, format.nativeValue, data)
     }
 
     fun deleteCoverArt() {
         if (ptr == 0L) return
-        TagLib.mp4Tag_deleteCoverArt(ptr)
+        nativeDelegate.deleteCoverArt(ptr)
     }
 
     fun save(): Boolean {
         if (ptr == 0L) return false
-        return TagLib.mp4Tag_save(ptr)
+        return nativeDelegate.save(ptr)
     }
 
-    override fun close() {
+    fun close() {
         ptr = 0L
     }
 }
